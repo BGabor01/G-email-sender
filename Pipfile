@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-flask = "~=2.3.3"
+g-rpc = {git = "https://github.com/baloghG01/G-Rpc"}
 
 [dev-packages]
 
