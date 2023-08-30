@@ -29,9 +29,8 @@ class EmailSender:
     def order_completed(self, order_data):
         order_data = json.loads(order_data)
         print(order_data)
-        reciever_email = "balogh.j.gabor@gmail.com"
         try:
-            self.server.sendmail(self.sender_email, reciever_email, str(order_data["ordered_products"]))
+            self.server.sendmail(self.sender_email, order_data["reciever_email"], str(order_data["ordered_products"]))
         except smtplib.SMTPException:
             raise Exception("Somethign went wrong")
 
