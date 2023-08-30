@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 g-rpc = {git = "https://github.com/baloghG01/G-Rpc"}
+python-dotenv = "*"
+pyopenssl = "*"
 
 [dev-packages]
 
