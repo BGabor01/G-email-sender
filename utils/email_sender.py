@@ -12,13 +12,12 @@ class EmailSender:
         logger.info("Starting SMTP connection...")
         self.sender_email = sender_email
         self.password = password
-        self.server = smtplib.SMTP(server_host, server_port, timeout=10)
+        self.server = smtplib.SMTP_SSL(server_host, server_port)
         self._login()
         logger.info("SMTP connection established.")
 
     def _login(self):
         try:
-            self.server.starttls(context=ssl.create_default_context())
             self.server.login(self.sender_email, self.password)
             logger.info("Logged in successfully.")
         except (smtplib.SMTPException, ssl.SSLError) as e:
