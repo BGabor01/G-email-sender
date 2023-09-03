@@ -33,13 +33,14 @@ def initialize_email_sender():
         logger.error("Error initializing EmailSender: Missing environment variables.")
         raise
 
-def initialize_server(email_sender):
+def initialize_server(email_sender : EmailSender):
     """Initialize the gRPC server and set up its methods."""
     try:
         server = Server("EMAIL_SENDER", host=os.environ.get("RABBITMQ_HOST"))
         server.connect()
         server.add_method('order_completed', email_sender.order_completed)
         logger.info("Order_completed method added to the server")
+        server.add_method('registration', email_sender.registration_email)
         return server
     except ConnectionError:
         logger.error("Error initializing server: Connection Error")
