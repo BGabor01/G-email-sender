@@ -4,7 +4,7 @@ import json
 import logging
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from .helpers import format_email
+from .helpers import format_order_email, format_reg_email
 from .exceptions import EmailSendError
 
 
@@ -61,7 +61,7 @@ class EmailSender:
         msg['From'] = self.sender_email
         msg['To'] = email_data["customer_email"]
 
-        formatted_message = format_email(email_data)
+        formatted_message = format_order_email(email_data)
 
         msg.attach(MIMEText(formatted_message, 'html'))
 
@@ -72,5 +72,27 @@ class EmailSender:
         except smtplib.SMTPException as e:
             logger.error(f"Error: {e}")
             raise EmailSendError()
+        
+    def registration_email(self, user_data):
+
+        json.loads(user_data)
+
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = 'Registration'
+        msg['From'] = self.sender_email
+        msg['To'] = user_data["email"]
+
+        formatted_message = format_reg_email()
+
+        msg.attach(MIMEText(formatted_message, 'html'))
+
+        try:
+            self.server.send_message(msg)
+            logger.info("Email sent!")
+            return "Email sent!"
+        except smtplib.SMTPException as e:
+            logger.error(f"Error: {e}")
+            raise EmailSendError()
+
 
 
