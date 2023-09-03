@@ -24,7 +24,7 @@ class EmailSender:
     A class to send emails using an SMTP SSL connection.
     """
 
-    def __init__(self, sender_email, password, server_host, server_port):
+    def __init__(self, sender_email : str, password : str, server_host : str, server_port : int):
         """
         Initialize the EmailSender with SMTP configurations.
         
