@@ -73,14 +73,12 @@ class EmailSender:
             logger.error(f"Error: {e}")
             raise EmailSendError()
         
-    def registration_email(self, user_data):
-
-        json.loads(user_data)
+    def registration_email(self, user_data : bytes):
 
         msg = MIMEMultipart('alternative')
         msg['Subject'] = 'Registration'
         msg['From'] = self.sender_email
-        msg['To'] = user_data["email"]
+        msg['To'] = user_data.decode()
 
         formatted_message = format_reg_email()
 
