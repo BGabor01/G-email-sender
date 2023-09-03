@@ -1,4 +1,4 @@
-def format_email(email_data):
+def format_order_email(email_data):
 
     html = """
     <html>
@@ -17,5 +17,33 @@ def format_email(email_data):
         </body>
     </html>
     """.format(customer_name=email_data['customer_name'])
+
+    return html
+
+
+def format_reg_email():
+    html = """<html>
+    <head>
+        <title>Thank You</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                padding: 20px;
+                background-color: #f7f7f7;
+            }
+            .container {
+                background-color: #ffffff;
+                padding: 20px;
+                border-radius: 8px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h2>Thank You for Your Registration!</h2>
+            <p>We're glad to have you with us. If you have any questions, feel free to reach out!</p>
+        </div>
+    </body>
+    </html>"""
 
     return html
