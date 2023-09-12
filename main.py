@@ -1,25 +1,39 @@
 import os
 import logging
+from dotenv import load_dotenv
+
 from g_rpc import Server
 from utils import EmailSender
-from dotenv import load_dotenv
 
 load_dotenv()
 
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
-                    datefmt='%Y-%m-%d %H:%M',
-                    handlers=[
-                        logging.FileHandler("./utils/logs/MainService.log", 'a', 'utf-8'),
-                        logging.StreamHandler()
-                    ])
 
-
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+    datefmt='%Y-%m-%d %H:%M',
+    handlers=[
+        logging.FileHandler("./utils/logs/MainService.log", 'a', 'utf-8'),
+        logging.StreamHandler()
+    ]
+)
 logger = logging.getLogger("MainService")
 
 
-def initialize_email_sender():
-    """Initialize the email sender and log its status."""
+def initialize_email_sender() -> EmailSender:
+    """
+    Initialize and return an instance of EmailSender.
+    
+    Returns
+    -------
+    EmailSender
+        An initialized EmailSender object.
+        
+    Raises
+    ------
+    KeyError
+        If any required environment variables are missing.
+    """
     try:
         email_sender = EmailSender(
             os.environ.get("SENDER_EMAIL"),
@@ -33,8 +47,26 @@ def initialize_email_sender():
         logger.error("Error initializing EmailSender: Missing environment variables.")
         raise
 
-def initialize_server(email_sender : EmailSender):
-    """Initialize the gRPC server and set up its methods."""
+def initialize_server(email_sender : EmailSender) -> Server:
+    """
+    Initialize and return a gRPC server with email methods.
+
+    Parameters
+    ----------
+    email_sender : EmailSender
+        An initialized EmailSender object.
+
+    Returns
+    -------
+    Server
+        An initialized gRPC Server object.
+
+    Raises
+    ------
+    ConnectionError
+        If there's a connection problem when initializing the server.
+    """
+
     try:
         server = Server("EMAIL_SENDER", host=os.environ.get("RABBITMQ_HOST"))
         server.connect()
