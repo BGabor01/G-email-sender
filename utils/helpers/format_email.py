@@ -1,4 +1,4 @@
-def format_order_email(email_data):
+def format_order_email(email_data) -> str:
 
     html = """
     <html>
@@ -21,7 +21,7 @@ def format_order_email(email_data):
     return html
 
 
-def format_reg_email():
+def format_reg_email() -> str:
     html = """<html>
     <head>
         <title>Thank You</title>
