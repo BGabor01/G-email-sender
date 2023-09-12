@@ -4,8 +4,10 @@ import json
 import logging
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from .helpers import format_order_email, format_reg_email
+
 from .exceptions import EmailSendError
+from .helpers import format_order_email, format_reg_email
+
 
 
 logging.basicConfig(level=logging.INFO,
@@ -21,18 +23,29 @@ logger = logging.getLogger("Email-Sender")
 
 class EmailSender:
     """
-    A class to send emails using an SMTP SSL connection.
+    A utility class to send emails using an SMTP SSL connection.
+
     """
 
     def __init__(self, sender_email : str, password : str, server_host : str, server_port : int):
         """
-        Initialize the EmailSender with SMTP configurations.
-        
-        :param sender_email: Email address used to send emails.
-        :param password: Password for the sender_email.
-        :param server_host: SMTP server host.
-        :param server_port: SMTP server port.
+        Initialize an EmailSender instance and establish an SMTP SSL connection.
+
+        Parameters
+        ----------
+        sender_email : str
+            Email address used to send emails.
+
+        password : str
+            Password for the sender_email.
+
+        server_host : str
+            Hostname of the SMTP server.
+
+        server_port : int
+            Port number for the SMTP server.
         """
+
         logger.info("Starting SMTP connection...")
         self.sender_email = sender_email
         self.password = password
@@ -42,8 +55,14 @@ class EmailSender:
 
     def _login(self):
         """
-        Log in to the SMTP server.
+        Authenticate and log in to the SMTP server using the provided email and password.
+        
+        Raises
+        ------
+        ConnectionError
+            If login to SMTP server fails.
         """
+
         try:
             self.server.login(self.sender_email, self.password)
             logger.info("Logged in successfully.")
@@ -52,7 +71,25 @@ class EmailSender:
             raise ConnectionError("Failed to login to the SMTP server. More info in the logs: /utils/logs/EmailSender.log")
 
 
-    def order_completed(self, order_data):
+    def order_completed(self, order_data:json) -> str:
+        """
+        Send an email detailing a completed order.
+        
+        Parameters
+        ----------
+        order_data : str
+            JSON string containing order details.
+
+        Returns
+        -------
+        str
+            A message confirming email sent status.
+
+        Raises
+        ------
+        EmailSendError
+            If sending the email fails.
+        """
         
         email_data = json.loads(order_data)
 
@@ -73,12 +110,30 @@ class EmailSender:
             logger.error(f"Error: {e}")
             raise EmailSendError()
         
-    def registration_email(self, user_data : bytes):
+    def registration_email(self, user_email : bytes) -> str:
+        """
+        Send a registration confirmation email.
+        
+        Parameters
+        ----------
+        user_email : bytes
+            Byte encoded string containing the user's email address.
+
+        Returns
+        -------
+        str
+            A message confirming email sent status.
+
+        Raises
+        ------
+        EmailSendError
+            If sending the email fails.
+        """
 
         msg = MIMEMultipart('alternative')
         msg['Subject'] = 'Registration'
         msg['From'] = self.sender_email
-        msg['To'] = user_data.decode()
+        msg['To'] = user_email.decode()
 
         formatted_message = format_reg_email()
 
