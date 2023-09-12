@@ -5,8 +5,8 @@ import logging
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-from .exceptions import EmailSendError
 from .helpers import format_order_email, format_reg_email
+from .components import RpcResponse
 
 
 
@@ -105,10 +105,12 @@ class EmailSender:
         try:
             self.server.send_message(msg)
             logger.info("Email sent!")
-            return "Email sent!"
+            return RpcResponse(success=True, message="Email sent successfully.")
+        
         except smtplib.SMTPException as e:
-            logger.error(f"Error: {e}")
-            raise EmailSendError()
+            error_msg = f"Failed to send email: {e}"
+            logger.error(error_msg)
+            return RpcResponse(success=False, message=error_msg)
         
     def registration_email(self, user_email : bytes) -> str:
         """
@@ -142,10 +144,12 @@ class EmailSender:
         try:
             self.server.send_message(msg)
             logger.info("Email sent!")
-            return "Email sent!"
+            return RpcResponse(success=True, message="Email sent successfully.")
+        
         except smtplib.SMTPException as e:
-            logger.error(f"Error: {e}")
-            raise EmailSendError()
+            error_msg = f"Failed to send email: {e}"
+            logger.error(error_msg)
+            return RpcResponse(success=False, message=error_msg)
 
 
 
