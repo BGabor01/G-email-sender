@@ -71,7 +71,7 @@ class EmailSender:
             raise ConnectionError("Failed to login to the SMTP server. More info in the logs: /utils/logs/EmailSender.log")
 
 
-    def order_completed(self, order_data:json) -> str:
+    def order_completed(self, order_data:json) -> RpcResponse:
         """
         Send an email detailing a completed order.
         
@@ -82,13 +82,8 @@ class EmailSender:
 
         Returns
         -------
-        str
+        RpcResponse
             A message confirming email sent status.
-
-        Raises
-        ------
-        EmailSendError
-            If sending the email fails.
         """
         
         email_data = json.loads(order_data)
@@ -112,7 +107,7 @@ class EmailSender:
             logger.error(error_msg)
             return RpcResponse(success=False, message=error_msg)
         
-    def registration_email(self, user_email : bytes) -> str:
+    def registration_email(self, user_email : bytes) -> RpcResponse:
         """
         Send a registration confirmation email.
         
@@ -123,13 +118,8 @@ class EmailSender:
 
         Returns
         -------
-        str
+        RpcResponse
             A message confirming email sent status.
-
-        Raises
-        ------
-        EmailSendError
-            If sending the email fails.
         """
 
         msg = MIMEMultipart('alternative')
